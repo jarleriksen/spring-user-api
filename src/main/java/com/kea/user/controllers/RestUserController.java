@@ -1,5 +1,7 @@
 package com.kea.user.controllers;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.kea.user.exception.ResourceNotFoundException;
 import com.kea.user.models.User;
 import com.kea.user.repository.UserRepository;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class RestUserController {
@@ -22,11 +25,13 @@ public class RestUserController {
     PasswordEncoder passwordEncoder;
 
     @GetMapping("/users")
+    @JsonView(View.Public.class)
     public List<User> fetchUsers() {
+        System.out.println("Fetching Users");
         return userRepository.findAll();
     }
 
-    @PostMapping("/user")
+    @PostMapping("/users")
     public User createUser(@Valid @RequestBody User user) {
         user.setUsername(user.getUsername());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -41,7 +46,7 @@ public class RestUserController {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
     }
 
-    @PutMapping("/user/{id}")
+    @PutMapping("/users/{id}")
     public User updateUser(@PathVariable(value = "id") Long userId,
                            @Valid @RequestBody User userDetails) {
         User user = userRepository.findById(userId)
@@ -54,7 +59,7 @@ public class RestUserController {
         return updatedUser;
     }
 
-    @DeleteMapping("/user/{id}")
+    @DeleteMapping("/users/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable(value = "id") Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));

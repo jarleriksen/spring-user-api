@@ -1,6 +1,8 @@
 package com.kea.user.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.kea.user.controllers.View;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -42,22 +44,27 @@ public class User {
         this.id = id;
     }
 
+    @JsonView(View.Public.class)
     public String getUsername() {
         return username;
     }
 
+    @JsonView(View.Public.class)
     public void setUsername(String username) {
         this.username = username;
     }
 
+    @JsonView(View.Internal.class)
     public String getPassword() {
         return password;
     }
 
+    @JsonView(View.Internal.class)
     public void setPassword(String password) {
         this.password = password;
     }
 
+    @JsonView(View.Public.class)
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -66,6 +73,7 @@ public class User {
         this.createdAt = createdAt;
     }
 
+    @JsonView(View.Public.class)
     public Date getUpdatedAt() {
         return updatedAt;
     }
